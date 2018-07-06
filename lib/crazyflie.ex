@@ -17,4 +17,5 @@ defmodule Crazyflie do
 
   def init(_uri), do: :erlang.nif_error("crazyflie nif not loaded")
   def ping(_copter), do: :erlang.nif_error("crazyflie nif not loaded")
+  def get_pid(_copter), do: :erlang.nif_error("crazyflie nif not loaded")
 end

@@ -7,14 +7,17 @@ using namespace std;
 
 typedef enum crazyflie_signal_t {
   CF_NOOP,
+  CF_PING,
+  CF_LINK_QUALITY,
+  CF_CONSOLE,
   CF_SHUTDOWN
 } crazyflie_signal_t;
 
 typedef struct SharedData {
   Crazyflie* copter;
-  ErlNifMutex* mut;
-  sem_t sem;
-  ErlNifPid* self;
+  sem_t copter_sem;
+  sem_t signal_sem;
+  ErlNifPid self;
   crazyflie_signal_t signal;
   void* arg;
 } shared_data_t;
@@ -36,8 +39,9 @@ typedef struct PrivData {
 
 static ERL_NIF_TERM crazyflie_init(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
 static ERL_NIF_TERM crazyflie_ping(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
-static ERL_NIF_TERM runtime_error_to_error_tuple(const runtime_error& error, ErlNifEnv *env, priv_data_t* priv);
+static ERL_NIF_TERM get_pid(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
 
+static ERL_NIF_TERM runtime_error_to_error_tuple(const runtime_error& error, ErlNifEnv *env, priv_data_t* priv);
 
 static void rt_dtor(ErlNifEnv *env, void *obj);
 static int load(ErlNifEnv* env, void** priv, ERL_NIF_TERM info);
@@ -50,6 +54,7 @@ static ErlNifResourceType *resource_type;
 static ErlNifFunc nif_funcs[] = {
   {"init", 1, crazyflie_init, ERL_NIF_DIRTY_JOB_CPU_BOUND},
   {"ping", 1, crazyflie_ping, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+  {"get_pid", 1, get_pid, 0}
 };
 
 ERL_NIF_INIT(Elixir.Crazyflie, nif_funcs, &load, &reload, &upgrade, &unload)
