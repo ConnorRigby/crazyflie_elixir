@@ -5,8 +5,23 @@
 
 using namespace std;
 
-typedef struct ResourceData {
+typedef enum crazyflie_signal_t {
+  CF_NOOP,
+  CF_SHUTDOWN
+} crazyflie_signal_t;
+
+typedef struct SharedData {
   Crazyflie* copter;
+  ErlNifMutex* mut;
+  sem_t sem;
+  ErlNifPid* self;
+  crazyflie_signal_t signal;
+  void* arg;
+} shared_data_t;
+
+typedef struct ResourceData {
+  ErlNifTid crazyflie_handler_tid;
+  shared_data_t* shared;
 } resource_data_t;
 
 typedef struct PrivData {
