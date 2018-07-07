@@ -6,6 +6,7 @@
 #include <semaphore.h>
 #include <memory>
 #include <math.h>
+#include <unistd.h>
 
 #include <Crazyflie.h>
 #include "crazyflie.hpp"
@@ -18,10 +19,10 @@ static void rt_dtor(ErlNifEnv *env, void *obj) {
     resource_data_t *rd = (resource_data_t *)obj;
     (void)priv;
 
-    rd->shared->exit = true;
-    enif_thread_join(rd->crazyflie_handler_tid, NULL);
-    // delete rd->shared->copter;
-    enif_fprintf(stderr, "Thread joined.\r\n");
+    // rd->shared->exit = true;
+    // enif_thread_join(rd->crazyflie_handler_tid, NULL);
+    // // delete rd->shared->copter;
+    // enif_fprintf(stderr, "Thread joined.\r\n");
 }
 
 static int load(ErlNifEnv* env, void** priv, ERL_NIF_TERM info) {
@@ -129,6 +130,8 @@ static void *crazyflie_thread(void *arg) {
       map_put(env, map, &map, atom_gyro_z, enif_make_double(env, data->gyro_z));
       map_put(env, map, &map, atom_timestamp, timestamp_term);
       enif_send(env, &shared->self, NULL, enif_make_tuple2(env, atom_logImu, map));
+      usleep(10000);
+
     });
 
     std::function<void(uint32_t, log2*)> log2_callback([env, shared](uint32_t timestamp, log2* data) {
@@ -151,6 +154,8 @@ static void *crazyflie_thread(void *arg) {
       map_put(env, map, &map, atom_pm_vbat, enif_make_double(env, data->pm_vbat));
       map_put(env, map, &map, atom_timestamp, timestamp_term);
       enif_send(env, &shared->self, NULL, enif_make_tuple2(env, atom_log2, map));
+      usleep(10000);
+
     });
 
     std::unique_ptr<LogBlock <logImu>> logBlockImu;
@@ -240,16 +245,17 @@ static void *crazyflie_thread(void *arg) {
           enif_send(env, &shared->self, NULL, msg);
         }
       }
+      // usleep(100000);
     }
 
     enif_fprintf(stderr, "cleaning up thread\r\n");
-    logBlockImu->stop();
-    logBlock2->stop();
 
-    // delete &logBlock2;
-    // delete &logBlockImu;
-    // delete shared->copter;
-    // free(shared);
+    logBlock2.release();
+    sleep(2); // i dont know.
+    logBlockImu.release();
+
+    delete shared->copter;
+    free(shared);
 
     enif_free_env(env);
     enif_fprintf(stderr, "crazyflie_thread ended\r\n");

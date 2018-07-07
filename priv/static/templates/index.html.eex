@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <script
+    src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+    crossorigin="anonymous"></script>
+    <script src="app.js"></script>
+    <style>
+    dt, dd {
+        font-family:sans-serif;
+    }
+    dt {
+       float:left;
+       clear:left;
+       text-align:right;
+       width:50%;
+       color:#bbb;
+    }
+    dd {
+       float:left;
+       margin-left:3em;
+       color:#999
+    }
+    </style>
+  </head>
+  <body>
+
+    <dl>
+      <dt name="acc_x"> acc_x </dt>
+      <dd name="acc_x_value"> unknown </dd>
+      <dt name="acc_y"> acc_y </dt>
+      <dd name="acc_y_value"> unknown </dd>
+      <dt name="acc_z"> acc_z </dt>
+      <dd name="acc_z_value"> unknown </dd>
+      <dt name="gyro_x"> gyro_x </dt>
+      <dd name="gyro_x_value"> unknown </dd>
+      <dt name="gyro_y"> gyro_y </dt>
+      <dd name="gyro_y_value"> unknown </dd>
+      <dt name="gyro_z"> gyro_z </dt>
+      <dd name="gyro_z_value"> unknown </dd>
+      <dt name="mag_x"> mag_x </dt>
+      <dd name="mag_x_value"> unknown </dd>
+      <dt name="mag_y"> mag_y </dt>
+      <dd name="mag_y_value"> unknown </dd>
+      <dt name="mag_z"> mag_z </dt>
+      <dd name="mag_z_value"> unknown </dd>
+      <dt name="baro_temp"> baro_temp </dt>
+      <dd name="baro_temp_value"> unknown </dd>
+      <dt name="baro_pressure"> baro_pressure </dt>
+      <dd name="baro_pressure_value"> unknown </dd>
+      <dt name="pm_vbat"> pm_vbat </dt>
+      <dd name="pm_vbat_value"> unknown </dd>
+    </dl>
+  </body>
+</html>

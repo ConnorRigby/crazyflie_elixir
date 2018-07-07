@@ -1,0 +1,7 @@
+<html>
+  <head>
+  </head>
+  <body>
+    no route found for <%= @conn.method %> <%= @conn.request_path %>
+  </body>
+</html>
