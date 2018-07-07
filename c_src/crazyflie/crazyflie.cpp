@@ -19,10 +19,10 @@ static void rt_dtor(ErlNifEnv *env, void *obj) {
     resource_data_t *rd = (resource_data_t *)obj;
     (void)priv;
 
-    // rd->shared->exit = true;
-    // enif_thread_join(rd->crazyflie_handler_tid, NULL);
-    // // delete rd->shared->copter;
-    // enif_fprintf(stderr, "Thread joined.\r\n");
+    rd->shared->exit = true;
+    enif_thread_join(rd->crazyflie_handler_tid, NULL);
+    // delete rd->shared->copter;
+    enif_fprintf(stderr, "Thread joined.\r\n");
 }
 
 static int load(ErlNifEnv* env, void** priv, ERL_NIF_TERM info) {

@@ -2,30 +2,38 @@ defmodule Crazyflie.Server do
   use GenServer
   @reg Crazyflie.Registry
 
-  def start_link(uri \\ ["radio://0/80/250k"]) do
-    GenServer.start_link(__MODULE__, uri)
+  def start_link(args \\ ["radio://0/80/250k"]) do
+    [uri] = args
+    GenServer.start_link(__MODULE__, args, name: name(uri))
   end
 
   def subscribe(uri \\ "radio://0/80/250k") do
-    Elixir.Registry.register(@reg, __MODULE__, self())
+    GenServer.call(name(uri), {:subscribe, self()})
   end
 
   def init([uri]) do
     {:ok, cf} = Crazyflie.connect(uri)
-    partitions = 10
-    opts = [keys: :duplicate, partitions: partitions, name: @reg]
-    {:ok, reg} = Elixir.Registry.start_link(opts)
-    {:ok, %{cf: cf, uri: uri, reg: reg}}
+    {:ok, %{cf: cf, uri: uri, reg: nil}}
   end
 
   def terminate(reason, _) do
     IO.inspect(reason, label: "Server died")
   end
 
-  def handle_info(info, state) do
-    Elixir.Registry.dispatch(@reg, __MODULE__, fn(entries) ->
-      for {pid, _} <- entries, do: send(pid, {__MODULE__, {state.uri, info}})
-    end)
+  def handle_info(info, %{reg: nil} = state) do
     {:noreply, state}
+  end
+
+  def handle_info(info, state) do
+    send(state.reg, {__MODULE__, {state.uri, info}})
+    {:noreply, state}
+  end
+
+  def handle_call({:subscribe, pid}, _, state) do
+    {:reply, :ok, %{state | reg: pid}}
+  end
+
+  defp name(uri) do
+    :"#{uri}"
   end
 end

@@ -6,6 +6,8 @@ defmodule Crazyweb.Socket do
   end
 
   def websocket_init(state) do
+    Crazyflie.Server.subscribe()
+    IO.puts "new socket"
     {:ok, %{}}
   end
 
@@ -18,8 +20,12 @@ defmodule Crazyweb.Socket do
     {:ok, state}
   end
 
-  def websocket_info(info, state) do
-    {:reply, state}
+  def websocket_info({Crazyflie.Server, {"radio://0/80/250k", {kind, data}}}, state) do
+    {:reply, {:text, Jason.encode!(%{kind: kind, data: data})}, state}
+  end
+
+  def websocket_info(_, state) do
+    {:ok, state}
   end
 
   def terminate(_reason, _req, _state) do
