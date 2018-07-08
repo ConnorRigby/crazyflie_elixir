@@ -1,6 +1,5 @@
 defmodule Crazyflie.Server do
   use GenServer
-  @reg Crazyflie.Registry
 
   def start_link(args \\ ["radio://0/80/250k"]) do
     [uri] = args
@@ -20,7 +19,7 @@ defmodule Crazyflie.Server do
     IO.inspect(reason, label: "Server died")
   end
 
-  def handle_info(info, %{reg: nil} = state) do
+  def handle_info(_info, %{reg: nil} = state) do
     {:noreply, state}
   end
 

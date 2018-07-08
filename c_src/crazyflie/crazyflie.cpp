@@ -21,7 +21,7 @@ static void rt_dtor(ErlNifEnv *env, void *obj) {
 
     rd->shared->exit = true;
     enif_thread_join(rd->crazyflie_handler_tid, NULL);
-    // delete rd->shared->copter;
+    enif_release_resource(rd);
     enif_fprintf(stderr, "Thread joined.\r\n");
 }
 
@@ -254,6 +254,8 @@ static void *crazyflie_thread(void *arg) {
     sleep(2); // i dont know.
     logBlockImu.release();
 
+    shared->copter->alloff();
+
     delete shared->copter;
     free(shared);
 
@@ -294,8 +296,8 @@ static ERL_NIF_TERM crazyflie_connect(ErlNifEnv *env, int argc, const ERL_NIF_TE
     }
 
     res = enif_make_resource(env, rd);
-    enif_release_resource(rd);
-
+    enif_keep_resource(rd);
+    enif_fprintf(stderr, "connected\r\n");
     return enif_make_tuple2(env, priv->atom_ok, res);
 }
 
