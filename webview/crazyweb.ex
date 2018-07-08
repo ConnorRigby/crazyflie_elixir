@@ -1,6 +1,8 @@
 defmodule Crazyweb do
   use Supervisor
   alias Crazyweb.{Socket, Router}
+  require Protocol
+  Protocol.derive(Jason.Encoder, Crazyflie, [])
 
   def start_link(args) do
     Supervisor.start_link(__MODULE__, args, name: __MODULE__)
@@ -13,6 +15,7 @@ defmodule Crazyweb do
         scheme: :http,
         plug: Router,
         options: [
+          acceptors: 1,
           dispatch: dispatch(),
           port: 4000
         ]

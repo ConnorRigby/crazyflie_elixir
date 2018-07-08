@@ -6,14 +6,14 @@
 using namespace std;
 
 typedef struct SharedData {
-  Crazyflie* copter;
-  ErlNifPid self;
-  bool exit;
+    Crazyflie* copter;
+    ErlNifPid self;
+    bool exit;
 } shared_data_t;
 
 typedef struct ResourceData {
-  ErlNifTid crazyflie_handler_tid;
-  shared_data_t* shared;
+    ErlNifTid crazyflie_handler_tid;
+    shared_data_t* shared;
 } resource_data_t;
 
 typedef struct PrivData {
@@ -39,7 +39,7 @@ static void unload(ErlNifEnv* env, void* priv);
 static ErlNifResourceType *resource_type;
 
 static ErlNifFunc nif_funcs[] = {
-  {"connect", 1, crazyflie_connect, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"connect", 1, crazyflie_connect, ERL_NIF_DIRTY_JOB_CPU_BOUND},
 };
 
 ERL_NIF_INIT(Elixir.Crazyflie, nif_funcs, &load, &reload, &upgrade, &unload)

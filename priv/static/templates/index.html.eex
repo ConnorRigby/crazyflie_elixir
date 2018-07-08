@@ -26,8 +26,8 @@
   <body>
 
     <dl>
-      <dt name="timestamp"> timestamp </dt>
-      <dd name="timestamp_value"> unknown </dd>
+      <dt name="link_quality"> link_quality </dt>
+      <dd name="link_quality_value"> unknown </dd>
       <dt name="acc_x"> acc_x </dt>
       <dd name="acc_x_value"> unknown </dd>
       <dt name="acc_y"> acc_y </dt>

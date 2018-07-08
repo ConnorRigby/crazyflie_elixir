@@ -6,22 +6,20 @@ defmodule Crazyweb.Socket do
   end
 
   def websocket_init(state) do
-    Crazyflie.Server.subscribe()
-    IO.puts "new socket"
+    Crazyflie.Server.subscribe("radio://0/80/250k")
     {:ok, %{}}
   end
 
-  # def websocket_handle({:text, message}, state) do
-  #   json = Jason.decode!(message)
-  #   websocket_handle({:json, json}, state)
-  # end
+  def websocket_handle({:text, "ping"}, state) do
+    {:ok, state}
+  end
 
   def websocket_handle({:text, _message}, state) do
     {:ok, state}
   end
 
-  def websocket_info({Crazyflie.Server, {"radio://0/80/250k", {kind, data}}}, state) do
-    {:reply, {:text, Jason.encode!(%{kind: kind, data: data})}, state}
+  def websocket_info({Crazyflie.Server, {"radio://0/80/250k", cf_state}}, state) do
+    {:reply, {:text, Jason.encode!(%{kind: :cf_state, data: cf_state})}, state}
   end
 
   def websocket_info(_, state) do

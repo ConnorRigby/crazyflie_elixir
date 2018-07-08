@@ -3,6 +3,21 @@ defmodule Crazyflie do
   Documentation for Crazyflie.
   """
 
+  defstruct link_quality: 0,
+            acc_x: 0,
+            acc_y: 0,
+            acc_z: 0,
+            gyro_x: 0,
+            gyro_y: 0,
+            gyro_z: 0,
+            baro_pressure: 0,
+            baro_temp: 0,
+            mag_x: 0,
+            mag_y: 0,
+            mag_z: 0,
+            pm_vbat: 0,
+            params: %{}
+
   @on_load :load_nif
   @doc false
   def load_nif do

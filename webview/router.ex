@@ -1,7 +1,7 @@
 defmodule Crazyweb.Router do
   use Plug.Router
 
-  plug Plug.Static, from: {:crazyflie, "priv/static"}, at: "/"
+  plug(Plug.Static, from: {:crazyflie, "priv/static"}, at: "/")
   plug(:match)
   plug(:dispatch)
 

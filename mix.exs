@@ -49,7 +49,11 @@ defmodule Crazyflie.MixProject do
         Could not format C code since astyle is not available.
         """)
 
-    System.cmd(astyle, ["-n", "-r", "c_src/*.c", "c_src/*.h"], into: IO.stream(:stdio, :line))
+    System.cmd(
+      astyle,
+      ["-n", "-r", "c_src/crazyflie/*.cpp", "c_src/crazyflie/*.hpp"],
+      into: IO.stream(:stdio, :line)
+    )
   end
 
   defp format_c(_args), do: true
